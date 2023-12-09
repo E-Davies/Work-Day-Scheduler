@@ -2,14 +2,19 @@ dayjs.extend(window.dayjs_plugin_advancedFormat);
 
 // renderLocalStorage();
 
+/************************ CAPTURE THE CURRENT DATE & TIME **********************************/
 const todaysDate = $('#currentDay');
 const displayedDate = dayjs().format('Do MMMM YYYY');
-const storedDate = dayjs().format('DD-MM-YYYY');
-let currentHour = dayjs().format('HH'); //gives the current hour in 2 figure 24hr time i.e. 5pm = 17
-
 todaysDate.text(displayedDate); //renders current date to top of webpage
+const storedDate = dayjs().format('DD-MM-YYYY'); //used for local storage
+let currentHour ;
 
-/**************************** KEEP TIME UPDATING ********************************/
+function updateTime(){
+        currentHour = dayjs().format('HH'); //gives the current hour in 2 figure 24hr time i.e. 5pm = 17
+        return currentHour;
+};
+
+const refreshTime = setInterval(updateTime, 10000); //refresh time every 10secs
 
 
 /************************* COLOUR CODING TIME SLOTS *************************/
@@ -23,9 +28,9 @@ function colourSchedule(){
                 let elementId = $(`#${i}`)
                 let plannerTime = elementId.data('hour');
 
-                if(plannerTime == currentHour){
+                if(plannerTime == updateTime()){
                         elementId.addClass('present');
-                }else if(plannerTime < currentHour){
+                }else if(plannerTime < updateTime()){
                         elementId.addClass('past');
                 }else{
                         elementId.addClass('future');
@@ -46,3 +51,52 @@ colourSchedule();
                                                         //pull info from local storage
                                                         //when date changes - wipe localstorage
 
+let storedSchedule = {
+        date: storedDate,
+        schedule: {
+                9: '',
+                10: '',
+                11: '',
+                12: '',
+                13: '',
+                14: '',
+                15: '',
+                16: '',
+                17: '',
+        }
+};
+
+function saveToLocalStorage(e){
+        let target = $(e.target);
+        let parent = $(e.currentTarget);
+        let todo = parent.children('textarea');
+        let todoHour = todo.data('hour');
+        // let todoItem = storedSchedule.schedule[todoHour];
+
+        if(target.is('button') || target.is('i')){
+                console.log('I Clicked on the saveBtn');
+                console.log(todo.val());
+                console.log(todoHour);
+                // console.log(`first value = ${todoItem}`);
+                
+                storedSchedule.schedule[todoHour] = todo.val();
+                
+                localStorage.setItem('storedSchedule', JSON.stringify(storedSchedule));
+                renderLocalStorage();
+        };
+};
+
+$('.row').on('click', saveToLocalStorage);
+
+
+function renderLocalStorage(){
+        let localStoredSchedule = JSON.parse(localStorage.getItem('storedSchedule'));
+        console.log(localStoredSchedule.today);
+
+        if(localStoredSchedule.today === storedDate){ //if the date stored in local storage is the same as today's date then render saved schedule
+                return
+                //render each time periods todo that has been stored
+        }else{ //otherwise clear local storage
+                localStorage.clear();
+        }
+};
