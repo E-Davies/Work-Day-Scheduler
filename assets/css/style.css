@@ -20,6 +20,10 @@ body {
     border-radius: 0;
     border-bottom: 10px solid black;
     padding: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
   
   .description {
@@ -49,12 +53,12 @@ body {
   }
   
   .present {
-    background-color: #ff6961;
+    background-color: #f9f9a4;
     color: white;
   }
   
   .future {
-    background-color: #77dd77;
+    background-color: #adfcad;
     color: white;
   }
   
@@ -64,10 +68,19 @@ body {
     border-bottom-right-radius: 15px;
     background-color: #06aed5;
     color: white;
-  }
-  
-  .saveBtn i:hover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 20px;
-    transition: all 0.3s ease-in-out;
   }
-  
+
+  .saveBtn:hover {
+    font-size: 30px;
+    transition: all 0.2s ease-in-out;
+    color: black;
+  }
+
+  #currentDay{
+    background-color: aquamarine;
+    width: 300px;
+  }
