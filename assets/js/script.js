@@ -1,58 +1,24 @@
 dayjs.extend(window.dayjs_plugin_advancedFormat);
 
-// renderLocalStorage();
 
 /************************ CAPTURE THE CURRENT DATE & TIME **********************************/
 const todaysDate = $('#currentDay');
 const displayedDate = dayjs().format('Do MMMM YYYY');
 todaysDate.text(displayedDate); //renders current date to top of webpage
-const storedDate = dayjs().format('DD-MM-YYYY'); //used for local storage
+const date = dayjs().format('DD-MM-YYYY'); //used for local storage
 let currentHour ;
 
-function updateTime(){
+function currentTime(){
         currentHour = dayjs().format('HH'); //gives the current hour in 2 figure 24hr time i.e. 5pm = 17
         return currentHour;
 };
 
-const refreshTime = setInterval(updateTime, 10000); //refresh time every 10secs
+const refreshTime = setInterval(currentTime, 10000); //refresh time every 10secs
 
-
-/************************* COLOUR CODING TIME SLOTS *************************/
-
-//colour code the textarea based on current time
-        //how to update the currentHour ---> set time interval --> every 20secs...? or do a loop?
-
-function colourSchedule(){
-        
-        for(let i = 9; i < 18; i++){
-                let elementId = $(`#${i}`)
-                let plannerTime = elementId.data('hour');
-
-                if(plannerTime == updateTime()){
-                        elementId.addClass('present');
-                }else if(plannerTime < updateTime()){
-                        elementId.addClass('past');
-                }else{
-                        elementId.addClass('future');
-                };
-        };
-};
-colourSchedule();
-
-
-/*************************** LOCAL STORAGE**********************************/
-
- //retrive any previous textarea input already in local storage
- // add further textarea input to the local storage array
- //add updated local storage array to local storage
-
-                                                        //***OLD***
-                                                        //capture textarea input and save it to local storage
-                                                        //pull info from local storage
-                                                        //when date changes - wipe localstorage
+/*****************************************************************************************/
 
 let storedSchedule = {
-        date: storedDate,
+        date: date,
         schedule: {
                 9: '',
                 10: '',
@@ -66,37 +32,70 @@ let storedSchedule = {
         }
 };
 
+renderLocalStorage();
+
+/************************* COLOUR TIME SLOTS *************************/
+//colour the textarea based on the current time 
+
+function colourSchedule(){
+        for(let i = 9; i < 18; i++){
+                let textareaID = $(`#${i}`)
+                let textareaDataAttr = textareaID.data('hour'); //get data attribute of textarea
+                let allTextareas = $('.textarea');
+
+                if(currentTime() < 9){
+                        allTextareas.addClass('future');
+                }else if(textareaDataAttr == currentTime()){
+                        textareaID.addClass('present');
+                }else if(textareaDataAttr < currentTime()){
+                        textareaID.addClass('past');
+                }else{
+                        textareaID.addClass('future');
+                };
+        };
+};
+colourSchedule();
+
+
+/*************************** LOCAL STORAGE **********************************/
+
+ //retrive any previous textarea input already in local storage
+        //
+
+function renderLocalStorage(){
+        storedSchedule = (JSON.parse(localStorage.getItem('storedSchedule')) || storedSchedule); // update storedSchedule with local storage info - OR - keep as blank object as initialised above
+
+        if(!storedSchedule){ // if there is no stored schedule
+                return;
+        }else if(storedSchedule.date == date){ //if the stored schedule = today's date - render that info
+                for(let i = 9; i < 18; i++){
+                        let textareaID = $(`#${i}`);
+                        let storedTodo = storedSchedule.schedule[i];
+                        textareaID.val(storedTodo);
+                };
+        }else{ //else if the stored date doesn't equal today (is a previous day) delete local storage as not relevant now and page will be blank/ready for today's schedule to be added
+                localStorage.clear();
+        };
+};
+
+ // add further textarea input to the local storage array
+ //add updated local storage array to local storage
+
 function saveToLocalStorage(e){
-        let target = $(e.target);
-        let parent = $(e.currentTarget);
+        let target = $(e.target); // the element the user clicked on
+        let parent = $(e.currentTarget); // the parent of the element the user clicked on
         let todo = parent.children('textarea');
         let todoHour = todo.data('hour');
-        // let todoItem = storedSchedule.schedule[todoHour];
 
         if(target.is('button') || target.is('i')){
-                console.log('I Clicked on the saveBtn');
                 console.log(todo.val());
                 console.log(todoHour);
-                // console.log(`first value = ${todoItem}`);
-                
+
                 storedSchedule.schedule[todoHour] = todo.val();
                 
                 localStorage.setItem('storedSchedule', JSON.stringify(storedSchedule));
-                renderLocalStorage();
         };
 };
 
 $('.row').on('click', saveToLocalStorage);
 
-
-function renderLocalStorage(){
-        let localStoredSchedule = JSON.parse(localStorage.getItem('storedSchedule'));
-        console.log(localStoredSchedule.today);
-
-        if(localStoredSchedule.today === storedDate){ //if the date stored in local storage is the same as today's date then render saved schedule
-                return
-                //render each time periods todo that has been stored
-        }else{ //otherwise clear local storage
-                localStorage.clear();
-        }
-};
