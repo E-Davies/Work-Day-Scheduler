@@ -60,20 +60,19 @@ colourSchedule();
 /*************************** LOCAL STORAGE **********************************/
 
  //retrive any previous textarea input already in local storage
-        //
 
 function renderLocalStorage(){
         storedSchedule = (JSON.parse(localStorage.getItem('storedSchedule')) || storedSchedule); // update storedSchedule with local storage info - OR - keep as blank object as initialised above
 
-        if(!storedSchedule){ // if there is no stored schedule
+        if(!storedSchedule){ // if there is no stored schedule - return
                 return;
-        }else if(storedSchedule.date == date){ //if the stored schedule = today's date - render that info
+        }else if(storedSchedule.date == date){ //if the stored schedule = today's date - render info in local storage
                 for(let i = 9; i < 18; i++){
                         let textareaID = $(`#${i}`);
                         let storedTodo = storedSchedule.schedule[i];
                         textareaID.val(storedTodo);
                 };
-        }else{ //else if the stored date doesn't equal today (is a previous day) delete local storage as not relevant now and page will be blank/ready for today's schedule to be added
+        }else{ //else if the stored date doesn't equal today (is a previous day), delete local storage as not relevant now and page will be blank/ready for today's schedule to be added
                 localStorage.clear();
         };
 };
@@ -88,11 +87,7 @@ function saveToLocalStorage(e){
         let todoHour = todo.data('hour');
 
         if(target.is('button') || target.is('i')){
-                console.log(todo.val());
-                console.log(todoHour);
-
                 storedSchedule.schedule[todoHour] = todo.val();
-                
                 localStorage.setItem('storedSchedule', JSON.stringify(storedSchedule));
         };
 };
