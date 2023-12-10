@@ -37,17 +37,7 @@ body {
     align-items: center;
     flex-direction: column;
   }
-
-  
-  .description {
-    white-space: pre-wrap;
-  }
-  
-  .time-block {
-    text-align: center;
-    border-radius: 15px;
-  }
-  
+    
   .row {
     white-space: pre-wrap;
     height: 80px;
