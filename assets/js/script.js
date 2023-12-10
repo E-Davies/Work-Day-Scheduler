@@ -99,11 +99,17 @@ function saveToLocalStorage(e){
         let parent = $(e.currentTarget); // the parent of the element the user clicked on
         let todo = parent.children('textarea');
         let todoHour = todo.data('hour');
+        let saveMsg = $('#saved');
 
         if(target.is('button') || target.is('i')){
                 storedSchedule.schedule[todoHour] = todo.val();
                 localStorage.setItem('storedSchedule', JSON.stringify(storedSchedule));
+                saveMsg.css('display', 'flex');
         };
+
+        const removeSavedMsg = setTimeout(() => {
+                saveMsg.css('display', 'none');
+            }, 3000); //hides the saved msg after 3secs
 };
 
 $('.row').on('click', saveToLocalStorage);

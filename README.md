@@ -1,87 +1,31 @@
-# Third-Party APIs: Work Day Scheduler
+# Work Day Scheduler
 
-## Your Task
+## Description
 
-Create a simple calendar application that allows a user to save events for each hour of the day by modifying starter code. This app will run in the browser and feature dynamically updated HTML and CSS powered by jQuery.
+As an employee with a busy schedule, I want to add important events to a daily planner so that I can manage my time effectively.
 
-You'll need to use the [Day.js](https://day.js.org/docs/en/display/format) library to work with date and time. Be sure to read the documentation carefully and concentrate on using Day.js in the browser.
+This work day scheduler has been achieved by:
+* Creating a UI that displays today's date and below, shows time slots for the working day (9am - 5pm).
+* Each time slot allows the user to add their schedule info and save it so that if the page is refreshed or reloaded, their info persists for that current day.
+*  As the time changes throughout the day, the time slots change colour to allow the user to easier identify the time:
+    * Grey - For previous time
+    * Yellow - For current time
+    * Green - For future time 
 
-## User Story
+![screenshot of application colour](./assets/images/work-scheduler-colours.JPG) 
 
-```md
-AS AN employee with a busy schedule
-I WANT to add important events to a daily planner
-SO THAT I can manage my time effectively
-```
+* When the current date changes, the scheduler resets ready to start adding that days schedule 
+    * Scheduler at 23:59 on 10th Dec 2023: ![screenshot of scheduler at 23:59 on 10th Dec 2023](./assets/images/work-scheduler-23-59.JPG)
 
-## Acceptance Criteria
-
-The app should:
-
-* Display the current day at the top of the calender when a user opens the planner.
- 
-* Present timeblocks for standard business hours when the user scrolls down.
- 
-* Color-code each timeblock based on past, present, and future when the timeblock is viewed.
- 
-* Allow a user to enter an event when they click a timeblock
-
-* Save the event in local storage when the save button is clicked in that timeblock.
-
-* Persist events between refreshes of a page
-
-The following animation demonstrates the application functionality:
-
-![A user clicks on slots on the color-coded calendar and edits the events.](./images/05-third-party-apis-homework-demo.gif)
+    * Scheduler at 00:00 on 11th Dec 2023:![screenshot of scheduler at 00:00 on 11th Dec 2023](./assets/images/work-scheduler-00-00.JPG)
 
 
-## Grading Requirements
 
-This homework is graded based on the following criteria: 
 
-### Technical Acceptance Criteria: 40%
+## Installation
 
-* Satisfies all of the above acceptance criteria plus the following:
+Please use the following link to access the website: https://e-davies.github.io/Work-Day-Scheduler/
 
-  * Uses a date utility library to work with date and time
+## Usage
 
-### Deployment: 32%
-
-* Application deployed at live URL
-
-* Application loads with no errors
-
-* Application GitHub URL submitted
-
-* GitHub repo contains application code
-
-### Application Quality: 15%
-
-* Application user experience is intuitive and easy to navigate
-
-* Application user interface style is clean and polished
-
-* Application resembles the mock-up functionality provided in the homework instructions
-
-### Repository Quality: 13%
-
-* Repository has a unique name
-
-* Repository follows best practices for file structure and naming conventions
-
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
-
-* Repository contains multiple descriptive commit messages
-
-* Repository contains quality README file with description, screenshot, and link to deployed application
-
-## Review
-
-You are required to submit the following for review:
-
-* The URL of the deployed application
-
-* The URL of the GitHub repository, with a unique name and a README describing the project
-
----
-© 2023 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+This application will be used by employees to organise their time. 
