@@ -1,19 +1,25 @@
 dayjs.extend(window.dayjs_plugin_advancedFormat);
 
+let date ; //used for local storage
+let currentHour ;
+let allTextareas = $('.textarea');
+
+
+currentDateAndTime();
+colourSchedule();
+
 
 /************************ CAPTURE THE CURRENT DATE & TIME **********************************/
-const todaysDate = $('#currentDay');
-const displayedDate = dayjs().format('Do MMMM YYYY');
-todaysDate.text(displayedDate); //renders current date to top of webpage
-const date = dayjs().format('DD-MM-YYYY'); //used for local storage
-let currentHour ;
 
-function currentTime(){
+function currentDateAndTime(){
+        
+        const displayedDate = $('#currentDay');
+        const todaysDate = dayjs().format('Do MMMM YYYY');
+        displayedDate.text(todaysDate); //renders current date to top of webpage
+        date = dayjs().format('DD-MM-YYYY'); //used for local storage
+
         currentHour = dayjs().format('HH'); //gives the current hour in 2 figure 24hr time i.e. 5pm = 17
-        return currentHour;
 };
-
-const refreshTime = setInterval(currentTime, 10000); //refresh time every 10secs
 
 /*****************************************************************************************/
 
@@ -34,6 +40,17 @@ let storedSchedule = {
 
 renderLocalStorage();
 
+const refreshSchedule = setInterval(function(){
+        currentDateAndTime();
+        colourSchedule();
+
+        storedSchedule = (JSON.parse(localStorage.getItem('storedSchedule')) || storedSchedule); // update storedSchedule with local storage info - OR - keep as blank object as initialised above
+        if (storedSchedule.date != date){
+                renderLocalStorage();
+        };
+}, 10000); //run functions every 10secs
+
+
 /************************* COLOUR TIME SLOTS *************************/
 //colour the textarea based on the current time 
 
@@ -41,21 +58,18 @@ function colourSchedule(){
         for(let i = 9; i < 18; i++){
                 let textareaID = $(`#${i}`)
                 let textareaDataAttr = textareaID.data('hour'); //get data attribute of textarea
-                let allTextareas = $('.textarea');
 
-                if(currentTime() < 9){
-                        allTextareas.addClass('future');
-                }else if(textareaDataAttr == currentTime()){
-                        textareaID.addClass('present');
-                }else if(textareaDataAttr < currentTime()){
-                        textareaID.addClass('past');
+                if(currentHour < 9){
+                        allTextareas.attr('class', 'textarea col-sm-10 future'); 
+                }else if(textareaDataAttr == currentHour){
+                        textareaID.attr('class', 'textarea col-sm-10 present');
+                }else if(textareaDataAttr < currentHour){
+                        textareaID.attr('class', 'textarea col-sm-10 past');
                 }else{
-                        textareaID.addClass('future');
+                        textareaID.attr('class', 'textarea col-sm-10 future');
                 };
         };
 };
-colourSchedule();
-
 
 /*************************** LOCAL STORAGE **********************************/
 
@@ -64,16 +78,16 @@ colourSchedule();
 function renderLocalStorage(){
         storedSchedule = (JSON.parse(localStorage.getItem('storedSchedule')) || storedSchedule); // update storedSchedule with local storage info - OR - keep as blank object as initialised above
 
-        if(!storedSchedule){ // if there is no stored schedule - return
-                return;
-        }else if(storedSchedule.date == date){ //if the stored schedule = today's date - render info in local storage
+        if(storedSchedule.date == date){ //if the stored schedule date = today's date - render info from local storage
                 for(let i = 9; i < 18; i++){
                         let textareaID = $(`#${i}`);
                         let storedTodo = storedSchedule.schedule[i];
                         textareaID.val(storedTodo);
                 };
-        }else{ //else if the stored date doesn't equal today (is a previous day), delete local storage as not relevant now and page will be blank/ready for today's schedule to be added
+        }else{ //else if the stored date doesn't equal today, delete local storage as not relevant now and page will be blank/ready for today's schedule to be added
                 localStorage.clear();
+                allTextareas.val('');
+                storedSchedule.date = date;
         };
 };
 
